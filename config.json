@@ -1,7 +1,7 @@
 {
   "couch": {
     "host": "https://ismart.iriscouch.com/",
-    "port": 80,
+    "port": 5984,
     "db": "gscreen"
   },
   "server": {
