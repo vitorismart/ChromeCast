@@ -16,7 +16,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-    angular.module("GScreen").controller("AlertForm", function($scope, $location, flash, Alert) {
+    angular.module("GScreen").controller("AlertForm", function($scope, $location,$http, flash, Alert) {
         $scope.maxTextLength = 140;
 
         $scope.alert = {
@@ -24,14 +24,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             duration: 60
         };
 
+        $scope.clearAlerts = function(){
+            console.log("reach first");
+            return $http.get("/custom/clearAlerts");
+        };
+
         return $scope.onFormSubmit = function() {
             var seconds;
             seconds = $scope.alert.duration;
             $scope.alert.expiresAt = new Date(new Date().getTime() + (seconds * 1000)).toISOString();
-            $scope.alert.repeatTime = seconds;
+            $scope.alert.repeatTime = 20;
 
             return Alert.save($scope.alert, function() {
-                flash.message("Your alert has been saved.");
+                flash.message("Your alert has been saveddd.");
                 return $location.url("/");
             });
         };

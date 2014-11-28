@@ -27,9 +27,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
     router.get("/clearAlerts", function(req, res) {
       console.log("reached!");
-      sockets.emit("alert-deleted");
-
-      return res.send();
+      return sockets.emit("alert-deleted");
     });
 
     return app.use('/custom/', router);

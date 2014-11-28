@@ -90,7 +90,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             var duration;
             if (alert) {
                 duration = new Date(alert.expiresAt).getTime() - new Date().getTime();
-                repeatTime = new Date(alert.repeatTime).getTime();
+                repeatTime = new Date(alert.repeatTime).getTime() * 1000;
                 console.log(repeatTime);
 
                 if (duration > 0) {
@@ -120,6 +120,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             return loadChromecastFromPersistence();
         });
         sockets.on("alert-deleted", function() {
+            console.log('alert deleted');
             scheduledAlert = null;
             return clearAlert();
         });
