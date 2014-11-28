@@ -1,0 +1,6 @@
+Ensuring DB Exists...
+C:\inetpub\wwwroot\node\greenscreen\target\server
+GScreen is listening to localhost:\\.\pipe\28dba0da-2ab2-4c88-8556-5cb5e951f345
+Creating Design Doc...
+[0mGET /greenscreen/app/ [32m200 [0m21.309 ms - 1317[0m
+[0mGET /greenscreen/ [32m200 [0m3.112 ms - 1317[0m

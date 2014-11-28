@@ -1,0 +1,11 @@
+Ensuring DB Exists...
+C:\inetpub\wwwroot\Greenscreen\target\server
+GScreen is listening to localhost:\\.\pipe\97d6c867-8cac-4be1-9aea-1ff46f9b203b
+Creating Design Doc...
+[0mGET /channels [32m200 [0m14.314 ms - 1317[0m
+[0mGET /api/channels [36m304 [0m15.620 ms - -[0m
+[0mGET /api/channels [36m304 [0m8.216 ms - -[0m
+[0mGET /channels [32m200 [0m2.725 ms - 1317[0m
+[0mGET /api/channels [32m200 [0m8.098 ms - 265[0m
+[0mGET /api/channels [36m304 [0m5.927 ms - -[0m
+[0mGET /api/receivers [32m200 [0m8.521 ms - 901[0m

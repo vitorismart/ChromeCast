@@ -1,0 +1,46 @@
+{
+  "name": "gscreen",
+  "version": "0.0.0",
+  "description": "Digital signage using Google Chromecast",
+  "main": "index.js",
+  "scripts": {
+    "dev": " node target/server/server.js & npm run bundle",
+    "start": "node target/server/server.js",
+    "test": "protractor tests/conf.js",
+    "webdriver": "webdriver-manager start",
+    "bundle": "cjsify -o public/js/gscreen.js target/client/gscreen.js -w",
+    "seed": "coffee scripts/seed",
+    "create-config": "cp config.template.json config.json && cp public/js/gscreen-config.template.js public/js/gscreen-config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.groupondev.com:cpowers/gscreen.git"
+  },
+  "author": "Chris Powers <chrisjpowers@gmail.com>",
+  "contributors": [
+    "Mike Aparicio <peruvianidol@gmail.com>",
+    "Edwin Zhang <ehzhang@mit.edu>"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "1.4.3",
+    "coffee-script": "^1.7.1",
+    "commonjs-everywhere": "~0.9.7",
+    "cradle": "~0.6.7",
+    "express": "^4.5.1",
+    "method-override": "^2.1.2",
+    "morgan": "^1.2.2",
+    "socket.io": "^1.0.6",
+    "underscore": "^1.6.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-jshint": "~0.9.2",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-less": "~0.11.0",
+    "grunt-contrib-cssmin": "~0.10.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-nodemon": "~0.3.0",
+    "grunt-concurrent": "~0.5.0"
+  }
+}

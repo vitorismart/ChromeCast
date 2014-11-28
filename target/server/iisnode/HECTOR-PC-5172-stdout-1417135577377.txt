@@ -1,0 +1,24 @@
+Ensuring DB Exists...
+C:\inetpub\wwwroot\Greenscreen\target\server
+GScreen is listening to localhost:\\.\pipe\f0ea7a51-c7bf-4022-992a-11f0dd47b67c
+Creating Design Doc...
+[0mGET / [32m200 [0m9.696 ms - 1317[0m
+[0mGET /favicon.ico [32m200 [0m8.833 ms - 1317[0m
+[0mGET /favicon.ico [36m304 [0m2.628 ms - -[0m
+[0mGET /api/receivers [32m200 [0m14.386 ms - 901[0m
+[0mGET /favicon.ico [36m304 [0m1.440 ms - -[0m
+[0mGET /api/channels [32m200 [0m5.464 ms - 265[0m
+[0mGET /favicon.ico [36m304 [0m1.538 ms - -[0m
+[0mGET /api/receivers [36m304 [0m12.493 ms - -[0m
+[0mGET /favicon.ico [32m200 [0m2.857 ms - 1317[0m
+[0mGET /api/channels [32m200 [0m6.149 ms - 265[0m
+[0mGET /chromecasts/new [32m200 [0m8.105 ms - 1317[0m
+[0mGET /api/channels [36m304 [0m6.146 ms - -[0m
+[0mGET /favicon.ico [36m304 [0m0.654 ms - -[0m
+[0mGET /favicon.ico [36m304 [0m1.139 ms - -[0m
+[0mGET /api/receivers [32m200 [0m31.881 ms - 901[0m
+[0mGET /favicon.ico [36m304 [0m1.472 ms - -[0m
+[0mGET /api/channels [36m304 [0m8.707 ms - -[0m
+[0mGET /chromecasts/new [36m304 [0m2.243 ms - -[0m
+[0mGET /api/channels [36m304 [0m4.284 ms - -[0m
+[0mGET /favicon.ico [36m304 [0m0.743 ms - -[0m

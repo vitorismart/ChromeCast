@@ -1,0 +1,6 @@
+Ensuring DB Exists...
+C:\inetpub\wwwroot\node\greenscreen\target\server
+GScreen is listening to localhost:\\.\pipe\69eef5de-19ca-4a0d-b743-04f32b7e8d76
+Creating Design Doc...
+[0mGET /greenscreen/js/vendor/jquery.js [32m200 [0m25.153 ms - 1317[0m
+[0mGET /greenscreen/js/vendor/jquery.js [36m304 [0m3.947 ms - -[0m

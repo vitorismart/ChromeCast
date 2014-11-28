@@ -1,0 +1,12 @@
+Ensuring DB Exists...
+C:\inetpub\wwwroot\node\target\server
+GScreen is listening to localhost:\\.\pipe\e9a6c644-bb6c-4ad7-bb39-1ff495e71299
+Creating Design Doc...
+[0mGET / [36m304 [0m8.136 ms - -[0m
+[0mGET / [36m304 [0m2.207 ms - -[0m
+[0mGET / [36m304 [0m1.167 ms - -[0m
+[0mGET / [36m304 [0m0.889 ms - -[0m
+[0mGET / [36m304 [0m0.780 ms - -[0m
+[0mGET / [36m304 [0m0.857 ms - -[0m
+[0mGET / [36m304 [0m0.450 ms - -[0m
+[0mGET / [36m304 [0m0.783 ms - -[0m
