@@ -18,7 +18,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 (function() {
 
     angular.module("GScreen").controller("Channels", function($scope, Channel) {
-        console.log("does it aa works!");
         $scope.channels = Channel.query();
         return $scope.channels;
     });

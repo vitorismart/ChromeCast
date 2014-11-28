@@ -16,56 +16,72 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-  var api, app, bodyParser, config, express, http, methodOverride, morgan, port, routes, server, socketIO, sockets, _ref;
+    var api, app, bodyParser, config, express, http, methodOverride, morgan, port, routes, server, socketIO, sockets, _ref;
 
-  http = require("http");
+    var allowCrossDomain = function(req, res, next) {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
-  express = require("express");
+        // intercept OPTIONS method
+        if ('OPTIONS' == req.method) {
+            res.send(200);
+        } else {
+            next();
+        }
+    };
 
-  morgan = require("morgan");
 
-  bodyParser = require("body-parser");
 
-  methodOverride = require("method-override");
+    http = require("http");
 
-  config = require("./config");
+    express = require("express");
 
-  api = require("./routes/api");
+    morgan = require("morgan");
 
-  communicationApi = require("./routes/communicationApi")
+    bodyParser = require("body-parser");
 
-  routes = require("./routes/routes");
+    methodOverride = require("method-override");
 
-  socketIO = require("socket.io");
+    config = require("./config");
 
-  app = express();
+    api = require("./routes/api");
 
-  server = http.createServer(app);
+    communicationApi = require("./routes/communicationApi")
 
-  sockets = socketIO(server);
+    routes = require("./routes/routes");
 
-  app.use(morgan('dev'));
+    socketIO = require("socket.io");
 
-  app.use(bodyParser.urlencoded({
-    extended: true
-  }));
+    app = express();
+    app.use(allowCrossDomain);
 
-  app.use(bodyParser.json());
+    server = http.createServer(app);
 
-  app.use(methodOverride());
+    sockets = socketIO(server);
 
-  console.log(__dirname);
-  app.use(express["static"]("" + __dirname + "/../../public"));
+    app.use(morgan('dev'));
 
-  api(app, sockets);
-  communicationApi(app,sockets);
+    app.use(bodyParser.urlencoded({
+        extended: true
+    }));
 
-  routes(app);
+    app.use(bodyParser.json());
 
-  port = process.env.PORT || ((_ref = config.server) != null ? _ref.port : void 0) || 4994;
+    app.use(methodOverride());
 
-  server.listen(port);
+    console.log(__dirname);
+    app.use(express["static"]("" + __dirname + "/../../public"));
 
-  console.log("GScreen is listening to localhost:" + port);
+    api(app, sockets);
+    communicationApi(app, sockets);
+
+    routes(app);
+
+    port = process.env.PORT || ((_ref = config.server) != null ? _ref.port : void 0) || 4994;
+
+    server.listen(port);
+
+    console.log("GScreen is listening to localhost:" + port);
 
 }).call(this);
