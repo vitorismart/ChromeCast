@@ -1,7 +1,7 @@
 {
   "couch": {
-    "host": "http://localhost",
-    "port": 5984,
+    "host": "https://ismart.iriscouch.com/",
+    "port": 80,
     "db": "gscreen"
   },
   "server": {
