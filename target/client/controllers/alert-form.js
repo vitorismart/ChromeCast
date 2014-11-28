@@ -24,10 +24,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             duration: 60
         };
 
-        $scope.clearAlerts = function(){
-            return $http.get("/custom/clearAlerts");
-        };
-
         return $scope.onFormSubmit = function() {
             var seconds;
             seconds = $scope.alert.duration;
