@@ -1063,9 +1063,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
         createScheduledAlert = function() {
             if (scheduledAlert) {
-                alert.expiresAt = new Date().getTime() + (scheduledAlert.duration * 1000);
 
                 setTimeout(function() {
+                    scheduledAlert.expiresAt = new Date().getTime() + (scheduledAlert.duration * 1000);
                     createAlert(scheduledAlert);
                 }, scheduledAlert.repeatTime * 1000);
             }
