@@ -82,7 +82,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
         createScheduledAlert = function() {
             if (scheduledAlert) {
-                setTimeout(function() { createAlert(scheduledAlert); }, scheduledAlert.repeatTime * 1000);
+                alert.expiresAt = new Date().getTime() + (alert.duration * 1000);
+
+                setTimeout(function() {
+                    createAlert(scheduledAlert);
+                }, scheduledAlert.repeatTime * 1000);
             }
         };
 
@@ -90,7 +94,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             var duration;
             if (alert) {
                 duration = new Date(alert.expiresAt).getTime() - new Date().getTime();
-           
+
                 if (duration > 0) {
                     updateAlert(alert);
                     console.log("duration", duration);
