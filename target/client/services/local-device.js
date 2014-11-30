@@ -84,8 +84,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             if (scheduledAlert) {
 
                 setTimeout(function() {
-                    scheduledAlert.expiresAt = new Date().getTime() + (scheduledAlert.duration * 1000);
-                    createAlert(scheduledAlert);
+                    if (scheduledAlert) {
+                        scheduledAlert.expiresAt = new Date().getTime() + (scheduledAlert.duration * 1000);
+                        createAlert(scheduledAlert);
+                    }
                 }, scheduledAlert.repeatTime * 1000);
             }
         };
