@@ -82,7 +82,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
         createScheduledAlert = function() {
             if (scheduledAlert) {
-                alert.expiresAt = new Date().getTime() + (alert.duration * 1000);
+                alert.expiresAt = new Date().getTime() + (scheduledAlert.duration * 1000);
 
                 setTimeout(function() {
                     createAlert(scheduledAlert);

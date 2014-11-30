@@ -28,6 +28,10 @@
         <label>Alert Duration</label>
         <div class="alert-duration">
             <label for="duration-1m">
+                <input type="radio" name="alert-duration" class="radio" value="10" id="duration-1m" ng-model="alert.duration">
+                <span>10s</span>
+            </label>
+            <label for="duration-1m">
                 <input type="radio" name="alert-duration" class="radio" value="60" id="duration-1m" ng-model="alert.duration">
                 <span>1m</span>
             </label>
@@ -62,7 +66,7 @@
             <a href="/" class="btn btn-cancel">Cancel</a>
         </div>
         <label for="alert-style-urgent" class="alert-style-label">
-            <button type="button" ng-click="clearAlerts()" class="btn" name="alert-style" id="alert-style-urgent" >
+            <button type="button" ng-click="clearAlerts()" class="btn" name="alert-style" id="alert-style-urgent">
                 <div class="alert-sample-urgent">Clear Alerts</div>
             </button>
         </label>
