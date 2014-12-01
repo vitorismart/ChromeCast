@@ -1,6 +1,6 @@
 {
   "couch": {
-    "host": "https://ismart.iriscouch.com/",
+    "host": "https://ismart.couchappy.com",
     "port": 80,
     "db": "gscreen"
   },
