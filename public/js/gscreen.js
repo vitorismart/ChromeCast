@@ -17,16 +17,66 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-    angular.module("GScreen").controller("AlertForm", function($scope, $location,$http, flash, Alert) {
-        $scope.maxTextLength = 140;
+    angular.module("GScreen").controller("AlertForm", function($scope, $location, $http, flash, Alert) {
 
+        $scope.colors = [{
+            code: "106",
+            color: "#A0522D"
+        }, {
+            code: "47",
+            color: "#CD5C5C"
+        },{
+            code: "87",
+            color: "#FF4500"
+        }, {
+            code: "17",
+            color: "#008B8B"
+        }, {
+            code: "18",
+            color: "#B8860B"
+        }, {
+            code: "68",
+            color: "#32CD32"
+        }, {
+            code: "42",
+            color: "#FFD700"
+        }, {
+            code: "77",
+            color: "#48D1CC"
+        }, {
+            code: "107",
+            color: "#87CEEB"
+        }, {
+            code: "46",
+            color: "#FF69B4"
+        }, {
+            code: "64",
+            color: "#87CEFA"
+        }, {
+            code: "13",
+            color: "#6495ED"
+        }, {
+            code: "15",
+            color: "#DC143C"
+        }, {
+            code: "24",
+            color: "#FF8C00"
+        }, {
+            code: "78",
+            color: "#C71585"
+        }, {
+            code: "123",
+            color: "#000000"
+        }];
+
+
+        $scope.maxTextLength = 140;
         $scope.alert = {
-            style: "default",
+            style: "#A0522D",
             duration: 60
         };
 
-        $scope.clearAlerts = function(){
-            console.log("reach first");
+        $scope.clearAlerts = function() {
             return $http.get("/custom/clearAlerts");
         };
 
@@ -36,7 +86,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             $scope.alert.expiresAt = new Date(new Date().getTime() + (seconds * 1000)).toISOString();
 
             return Alert.save($scope.alert, function() {
-                flash.message("Your alert has been saveddd.");
+                flash.message("Your alert has been saved.");
                 return $location.url("/");
             });
         };
