@@ -57,6 +57,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
       router.post("" + basePath, function(req, res) {
         var data, resource;
         data = req.body;
+        console.log(data);
         resource = new resourceClass(data);
         return resource.save(function(err) {
           if (err) {

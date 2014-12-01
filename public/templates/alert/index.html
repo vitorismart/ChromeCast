@@ -27,8 +27,8 @@
 
         <label>Alert Duration</label>
         <div class="alert-duration">
-            <label for="duration-1m">
-                <input type="radio" name="alert-duration" class="radio" value="10" id="duration-1m" ng-model="alert.duration">
+            <label for="duration-10s">
+                <input type="radio" name="alert-duration" class="radio" value="10" id="duration-10s" ng-model="alert.duration">
                 <span>10s</span>
             </label>
             <label for="duration-1m">
@@ -60,6 +60,12 @@
                 <span>24h</span>
             </label>
         </div>
+
+        <label>Repeat Time(in seconds)</label>
+        <div class="alert-duration">
+           <input type="text" ng-model="alert.repeatTime" name="repeatTime" value="-10" ng-model="alert.repeatTime"></input>
+        </div>
+
 
         <div class="submit-buttons">
             <input type="submit" name="submit" value="Push Alert">

@@ -100,7 +100,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 if (duration > 0) {
                     updateAlert(alert);
                     console.log("duration", duration);
-                    scheduledAlert = alert;
+
+                    if (alert.repeatTime) {
+                        scheduledAlert = alert;
+                    }
+
+
                     clearTimeoutId = setTimeout(clearAlert, Math.ceil(duration));
                     return clearTimeoutId;
 

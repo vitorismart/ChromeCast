@@ -4,11 +4,12 @@ module.exports = function(grunt) {
 
         concurrent: {
             first: {
-                tasks: ['watch','nodemon'],
-                options: { logConcurrentOutput: true }
+                tasks: ['watch', 'nodemon'],
+                options: {
+                    logConcurrentOutput: true
+                }
             }
         },
-
         // configure nodemon
         nodemon: {
             dev: {
@@ -37,8 +38,11 @@ module.exports = function(grunt) {
     });
 
     // load nodemon
+    grunt.loadNpmTasks('grunt-node-inspector');
+
+    // load nodemon
     grunt.loadNpmTasks('grunt-nodemon');
-    
+
     //load concurrent
     grunt.loadNpmTasks('grunt-concurrent');
 

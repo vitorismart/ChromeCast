@@ -33,7 +33,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             var seconds;
             seconds = $scope.alert.duration;
             $scope.alert.expiresAt = new Date(new Date().getTime() + (seconds * 1000)).toISOString();
-            $scope.alert.repeatTime = 5;//hard coded for testing
 
             return Alert.save($scope.alert, function() {
                 flash.message("Your alert has been saveddd.");
