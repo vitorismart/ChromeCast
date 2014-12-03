@@ -28,6 +28,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 if (err) {
                     return console.log("ERR", err);
                 }
+                Chromecast.session = s;
                 session = s;
                 return $scope.$apply(function() {
                     $scope.chromecast.name = session.session.receiver.friendlyName;
@@ -47,6 +48,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         $scope.onFormSubmit = function() {
             return Chromecast.save($scope.chromecast, function(chromecast) {
                 flash.message("Your changes to '" + $scope.chromecast.name + "' have been saved.");
+
                 if (session) {
                     session.send("setChromecastId", chromecast.id);
                 }

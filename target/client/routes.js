@@ -44,6 +44,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
     $routeProvider.when("/chromecasts/:id/edit", {
       templateUrl: "/templates/chromecasts/edit.html"
     });
+    $routeProvider.when("/videotest", {
+      templateUrl: "/templates/video/videotest.html"
+    });
     return $locationProvider.html5Mode(true);
   });
 

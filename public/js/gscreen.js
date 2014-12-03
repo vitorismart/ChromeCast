@@ -17,7 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-    angular.module("GScreen").controller("AlertForm", function($scope, $location, $http, flash, Alert) {
+    angular.module("GScreen").controller("AlertForm", function($scope, $location, $http, flash, Alert, Chromecast) {
 
         $scope.colors = [{
             code: "106",
@@ -25,7 +25,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         }, {
             code: "47",
             color: "#CD5C5C"
-        },{
+        }, {
             code: "87",
             color: "#FF4500"
         }, {
@@ -69,7 +69,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             color: "#000000"
         }];
 
-
+        console.log(Chromecast.session);
         $scope.maxTextLength = 140;
         $scope.alert = {
             style: "#A0522D",
@@ -80,7 +80,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             return $http.get("/custom/clearAlerts");
         };
 
-        return $scope.onFormSubmit = function() {
+        $scope.onFormSubmit = function() {
             var seconds;
             seconds = $scope.alert.duration;
             $scope.alert.expiresAt = new Date(new Date().getTime() + (seconds * 1000)).toISOString();
@@ -90,8 +90,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 return $location.url("/");
             });
         };
-    });
 
+    });
 }).call(this);
 
 },{}],"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\channel-form.js":[function(require,module,exports){
@@ -218,6 +218,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 if (err) {
                     return console.log("ERR", err);
                 }
+                Chromecast.session = s;
                 session = s;
                 return $scope.$apply(function() {
                     $scope.chromecast.name = session.session.receiver.friendlyName;
@@ -237,6 +238,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         $scope.onFormSubmit = function() {
             return Chromecast.save($scope.chromecast, function(chromecast) {
                 flash.message("Your changes to '" + $scope.chromecast.name + "' have been saved.");
+
                 if (session) {
                     session.send("setChromecastId", chromecast.id);
                 }
@@ -287,6 +289,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 $scope.chromecastAvailable = true;
                 return $scope.chromecastAvailable;
             });
+            
+
             return console.log("Chromecast is available", $scope.chromecastAvailable);
         });
     });
@@ -358,8 +362,18 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             try {
                 castAway = new CastAway();
                 receiver = castAway.receive();
-                return receiver.on("setChromecastId", function(id) {
+                receiver.on("setChromecastId", function(id) {
                     return localDevice.setChromecastId(id);
+                });
+
+                receiver.on("play", function() {
+                    window.mediaElement = $("#video");
+                    window.mediaManager =  new cast.receiver.MediaManager(window.mediaElement);
+                    console.log("play");
+                });
+
+                receiver.on("loading", function(){
+                    console.log("loading");
                 });
             } catch (_error) {
                 e = _error;
@@ -474,6 +488,47 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 }).call(this);
 
+},{}],"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\video.js":[function(require,module,exports){
+(function() {
+    angular.module("GScreen").controller("Video", function($scope, Chromecast) {
+
+
+        var media = {
+            "description": "what car can you get for a grand",
+            "source": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+            "subtitle": "By Garage419",
+            "thumb": "images/WhatCarCanYouGetForAGrand.jpg",
+            "title": "What care can you get for a grand?",
+            "contentType": "video/mp4"
+        };
+
+
+
+        $scope.castUrl = function() {
+            url = $scope.video.url;
+
+            session = Chromecast.session;
+            if (session) {
+                castVideo(url, session);
+            }
+        };
+
+        castVideo = function(url, session) {
+            console.log(url);
+
+            var mediaInfo = new chrome.cast.media.MediaInfo(media.source);
+
+            mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+            mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
+            mediaInfo.contentType = media.contentType;
+
+            var request = session.load(mediaInfo);
+        };
+
+    });
+
+}).call(this);
+
 },{}],"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\directives\\flash-container.js":[function(require,module,exports){
 // Generated by CoffeeScript 1.8.0
 
@@ -585,6 +640,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
   require("./controllers/screen");
 
+  require("./controllers/video");
+
   require("./controllers/takeover-form");
 
   require("./directives/flash-container");
@@ -609,7 +666,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 }).call(this);
 
-},{"./controllers/alert-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\alert-form.js","./controllers/channel-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\channel-form.js","./controllers/channels":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\channels.js","./controllers/chromecast-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\chromecast-form.js","./controllers/chromecasts":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\chromecasts.js","./controllers/main":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\main.js","./controllers/receiver":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\receiver.js","./controllers/screen":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\screen.js","./controllers/takeover-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\takeover-form.js","./directives/flash-container":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\directives\\flash-container.js","./directives/real-link":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\directives\\real-link.js","./resources/alert":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\alert.js","./resources/channel":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\channel.js","./resources/chromecast":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\chromecast.js","./resources/takeover":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\takeover.js","./routes":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\routes.js","./services/cast-away":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\cast-away.js","./services/flash":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\flash.js","./services/local-device":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\local-device.js","./services/sockets":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\sockets.js"}],"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\alert.js":[function(require,module,exports){
+},{"./controllers/alert-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\alert-form.js","./controllers/channel-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\channel-form.js","./controllers/channels":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\channels.js","./controllers/chromecast-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\chromecast-form.js","./controllers/chromecasts":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\chromecasts.js","./controllers/main":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\main.js","./controllers/receiver":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\receiver.js","./controllers/screen":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\screen.js","./controllers/takeover-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\takeover-form.js","./controllers/video":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\video.js","./directives/flash-container":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\directives\\flash-container.js","./directives/real-link":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\directives\\real-link.js","./resources/alert":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\alert.js","./resources/channel":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\channel.js","./resources/chromecast":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\chromecast.js","./resources/takeover":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\takeover.js","./routes":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\routes.js","./services/cast-away":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\cast-away.js","./services/flash":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\flash.js","./services/local-device":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\local-device.js","./services/sockets":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\sockets.js"}],"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\alert.js":[function(require,module,exports){
 // Generated by CoffeeScript 1.8.0
 
 /*
@@ -904,6 +961,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
     });
     $routeProvider.when("/chromecasts/:id/edit", {
       templateUrl: "/templates/chromecasts/edit.html"
+    });
+    $routeProvider.when("/videotest", {
+      templateUrl: "/templates/video/videotest.html"
     });
     return $locationProvider.html5Mode(true);
   });

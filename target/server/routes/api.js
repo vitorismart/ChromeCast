@@ -64,7 +64,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             return res.status(500).send(err);
           }
           sockets.emit("" + resourceClass.type + "-created", resource);
-          console.log("" + resourceClass.type + "-created");
+          console.log("aa" + resourceClass.type + "-created");
           return res.send(resource);
         });
       });

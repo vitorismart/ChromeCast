@@ -27,6 +27,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 $scope.chromecastAvailable = true;
                 return $scope.chromecastAvailable;
             });
+            
+
             return console.log("Chromecast is available", $scope.chromecastAvailable);
         });
     });

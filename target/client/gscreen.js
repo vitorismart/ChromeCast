@@ -36,6 +36,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
   require("./controllers/screen");
 
+  require("./controllers/video");
+
   require("./controllers/takeover-form");
 
   require("./directives/flash-container");

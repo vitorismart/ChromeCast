@@ -16,7 +16,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-    angular.module("GScreen").controller("AlertForm", function($scope, $location, $http, flash, Alert) {
+    angular.module("GScreen").controller("AlertForm", function($scope, $location, $http, flash, Alert, Chromecast) {
 
         $scope.colors = [{
             code: "106",
@@ -24,7 +24,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         }, {
             code: "47",
             color: "#CD5C5C"
-        },{
+        }, {
             code: "87",
             color: "#FF4500"
         }, {
@@ -68,7 +68,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             color: "#000000"
         }];
 
-
+        console.log(Chromecast.session);
         $scope.maxTextLength = 140;
         $scope.alert = {
             style: "#A0522D",
@@ -79,7 +79,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             return $http.get("/custom/clearAlerts");
         };
 
-        return $scope.onFormSubmit = function() {
+        $scope.onFormSubmit = function() {
             var seconds;
             seconds = $scope.alert.duration;
             $scope.alert.expiresAt = new Date(new Date().getTime() + (seconds * 1000)).toISOString();
@@ -89,6 +89,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 return $location.url("/");
             });
         };
-    });
 
+    });
 }).call(this);

@@ -37,8 +37,18 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             try {
                 castAway = new CastAway();
                 receiver = castAway.receive();
-                return receiver.on("setChromecastId", function(id) {
+                receiver.on("setChromecastId", function(id) {
                     return localDevice.setChromecastId(id);
+                });
+
+                receiver.on("play", function() {
+                    window.mediaElement = $("#video");
+                    window.mediaManager =  new cast.receiver.MediaManager(window.mediaElement);
+                    console.log("play");
+                });
+
+                receiver.on("loading", function(){
+                    console.log("loading");
                 });
             } catch (_error) {
                 e = _error;
