@@ -197,7 +197,7 @@
                 CustomReceiver.prototype.start = function() {
                     var bus, manager, mediaManager;
                     if(this.mediaElement){
-                        mediaManager = new cast.receiver.MediaManager(mediaElement);
+                        mediaManager = new cast.receiver.MediaManager(this.mediaElement);
                     }
                     manager = cast.receiver.CastReceiverManager.getInstance();
                     bus = manager.getCastMessageBus(this.namespace);
