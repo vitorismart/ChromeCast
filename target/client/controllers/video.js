@@ -1,5 +1,17 @@
 (function() {
-    angular.module("GScreen").controller("Video", function($scope, Chromecast) {
+    angular.module("GScreen").controller("Video", function($scope, Chromecast, CONFIG) {
+        var castAway = new CastAway({
+            applicationID: CONFIG.chromecastApplicationId,
+            namespace: "urn:x-cast:json"
+        });
+
+        castAway.initialize(function(err, data) {
+            if (err) {
+                return console.log("error initialized", err);
+            } else {
+                return console.log("initialized", data);
+            }
+        });
 
 
         var media = {
@@ -12,27 +24,34 @@
         };
 
 
-
-        $scope.castUrl = function() {
-            url = $scope.video.url;
-
-            session = Chromecast.session;
-            if (session) {
-                castVideo(url, session);
-            }
+        onSuccess = function() {
+            console.log("yay!");
         };
 
-        castVideo = function(url, session) {
-            console.log(url);
-
-            var mediaInfo = new chrome.cast.media.MediaInfo(media.source);
-
-            mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
-            mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
-            mediaInfo.contentType = media.contentType;
-
-            var request = session.load(mediaInfo);
+        onError = function() {
+            console.log("ah");
         };
+
+        castAway.on("receivers:available", function() {
+            castAway.requestSession(function(err, session) {
+
+                if (err) {
+                    return console.log("Error getting session", err);
+                }
+
+                var mediaInfo = new chrome.cast.media.MediaInfo(media.source);
+
+                mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+                mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
+                mediaInfo.contentType = media.contentType;
+
+                window.session = session;
+                session.load(mediaInfo);
+                console.log(session);
+            });
+        });
+
+
 
     });
 
