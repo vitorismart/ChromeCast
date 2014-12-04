@@ -191,10 +191,14 @@
                     this.config = new cast.receiver.CastReceiverManager.Config();
                     this.config.statusText = config.statusText || DEFAULT_STATUS_TEXT;
                     this.config.maxInactivity = config.maxInactivity || DEFAULT_MAX_INACTIVITY;
+                    this.mediaElement = config.mediaElement;
                 }
 
                 CustomReceiver.prototype.start = function() {
-                    var bus, manager;
+                    var bus, manager, mediaManager;
+                    if(this.mediaElement){
+                        mediaManager = new cast.receiver.MediaManager(mediaElement);
+                    }
                     manager = cast.receiver.CastReceiverManager.getInstance();
                     bus = manager.getCastMessageBus(this.namespace);
                     bus.onMessage = this.onMessage;

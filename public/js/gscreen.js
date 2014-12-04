@@ -342,16 +342,44 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 (function() {
     angular.module("GScreen").controller("Receiver", function($scope, $sce, $location, localDevice) {
-         window.onload = function() {
+        var match;
+        if (match = $location.url().match(/\/chromecasts\/([^\/\?#]+)/)) {
+            localDevice.setChromecastId(match[1]);
+        }
+        $scope.title = "Setting Up Chromecast";
+        $scope.chromecast = null;
+        $scope.channelUrl = null;
+        localDevice.on("change", function(c) {
+            $scope.chromecast = c;
+            $scope.title = "Greenscreen - " + c.name;
+            $scope.channelUrl = $sce.trustAsResourceUrl("/channels/" + c.channelId);
+            if (!$scope.$$phase) {
+                return $scope.$apply();
+            }
+        });
 
-            cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG);
-            console.log('Starting media application');
+        return window.onload = function() {
+            var castAway, e, receiver, mediaElement;
+            try {
 
-            var mediaElement = document.getElementById("video");
-            var castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
-            var mediaManager = new cast.receiver.MediaManager(mediaElement);
+                cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG);
+                console.log('Starting media application');
+                mediaElement = document.getElementById("video");
+                castAway = new CastAway();
 
-            castReceiverManager.start();
+                castConfig = {
+                    "mediaElement": mediaElement
+                };
+                
+                receiver = castAway.receive(castConfig);
+                receiver.on("setChromecastId", function(id) {
+                    return localDevice.setChromecastId(id);
+                });
+
+            } catch (_error) {
+                e = _error;
+                return console.log("Cannot load CastAway", e);
+            }
         };
     });
 
