@@ -17,28 +17,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 (function() {
     angular.module("GScreen").controller("Receiver", function($scope, $sce, $location, localDevice) {
-        var match;
-        if (match = $location.url().match(/\/chromecasts\/([^\/\?#]+)/)) {
-            localDevice.setChromecastId(match[1]);
-        }
-        $scope.title = "Setting Up Chromecast";
-        $scope.chromecast = null;
-        $scope.channelUrl = null;
-        localDevice.on("change", function(c) {
-            $scope.chromecast = c;
-            $scope.title = "Greenscreen - " + c.name;
-            $scope.channelUrl = $sce.trustAsResourceUrl("/channels/" + c.channelId);
-            if (!$scope.$$phase) {
-                return $scope.$apply();
-            }
-        });
-
-        window.onload = function() {
+         window.onload = function() {
 
             cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG);
             console.log('Starting media application');
 
-            var castAway, e, receiver;
             var mediaElement = document.getElementById("video");
             var castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
             var mediaManager = new cast.receiver.MediaManager(mediaElement);
