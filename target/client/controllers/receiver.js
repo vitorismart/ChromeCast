@@ -34,6 +34,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         });
 
         window.onload = function() {
+
+            cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG);
+            console.log('Starting media application');
+
             var castAway, e, receiver;
             var mediaElement = document.getElementById("video");
             var castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
