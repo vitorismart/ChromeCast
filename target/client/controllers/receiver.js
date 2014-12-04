@@ -26,10 +26,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             var castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
             var mediaManager = new cast.receiver.MediaManager(mediaElement);
 
-            mediaElement.addEventListener('loadedmetadata', function() {
-                mediaManager.broadcastStatus(true);
-            });
-
             castReceiverManager.start();
         };
     });
