@@ -357,28 +357,21 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 return $scope.$apply();
             }
         });
-        return window.onload = function() {
+
+        window.onload = function() {
             var castAway, e, receiver;
-            try {
-                castAway = new CastAway();
-                receiver = castAway.receive();
-                receiver.on("setChromecastId", function(id) {
-                    return localDevice.setChromecastId(id);
-                });
+            var mediaElement = document.getElementById("video");
+            var castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+            var mediaManager = new cast.receiver.MediaManager(mediaElement);
 
-                receiver.on("play", function() {
-                    window.mediaElement = $("#video");
-                    window.mediaManager =  new cast.receiver.MediaManager(window.mediaElement);
-                    console.log("play");
-                });
-
-                receiver.on("loading", function(){
-                    console.log("loading");
-                });
-            } catch (_error) {
-                e = _error;
-                return console.log("Cannot load CastAway", e);
-            }
+            mediaElement.addEventListener('loadedmetadata', function() {
+                if (currentVideoIndex >= 0) {
+                    // When metadataloaded completes, we can send the new media
+                    // information to the senders. We use metadataloaded so we
+                    // can send the new duration.
+                    mediaManager.broadcastStatus(true);
+                }
+            });
         };
     });
 

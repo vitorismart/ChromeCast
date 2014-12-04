@@ -47,7 +47,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
     api = require("./routes/api");
 
-    communicationApi = require("./routes/communicationApi")
+    communicationApi = require("./routes/communicationApi");
 
     routes = require("./routes/routes");
 

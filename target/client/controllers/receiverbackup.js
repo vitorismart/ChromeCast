@@ -32,18 +32,28 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 return $scope.$apply();
             }
         });
-
-        window.onload = function() {
+        return window.onload = function() {
             var castAway, e, receiver;
-            var mediaElement = document.getElementById("video");
-            var castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
-            var mediaManager = new cast.receiver.MediaManager(mediaElement);
+            try {
+                castAway = new CastAway();
+                receiver = castAway.receive();
+                receiver.on("setChromecastId", function(id) {
+                    return localDevice.setChromecastId(id);
+                });
 
-            mediaElement.addEventListener('loadedmetadata', function() {
-                mediaManager.broadcastStatus(true);
-            });
+                receiver.on("play", function() {
+                    window.mediaElement = $("#video");
+                    window.mediaManager =  new cast.receiver.MediaManager(window.mediaElement);
+                    console.log("play");
+                });
 
-            castReceiverManager.start();
+                receiver.on("loading", function(){
+                    console.log("loading");
+                });
+            } catch (_error) {
+                e = _error;
+                return console.log("Cannot load CastAway", e);
+            }
         };
     });
 
