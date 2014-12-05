@@ -104,6 +104,10 @@
                 };
 
                 CastAway.prototype.sessionListener = function(session) {
+                    if(session){
+                         this.emit('existingSessionFound', new Session(session, this));
+                    }
+
                     if (session.media.length !== 0) {
                         this.currentSession = session;
                         session.addUpdateListener(this.sessionUpdateListener);
@@ -848,7 +852,7 @@
                                 return _this.sessionUpdateListener();
                             });
                             controls = new MediaControls(media, _this.castAway);
-                            return cb(null, controls);
+                            return cb(controls);
                         };
                     })(this);
                     onError = function(err) {

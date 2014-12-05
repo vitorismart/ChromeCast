@@ -1,58 +1,44 @@
 (function() {
-    angular.module("GScreen").controller("Video", function($scope, Chromecast, CONFIG) {
-        var castAway = new CastAway({
-            applicationID: CONFIG.chromecastApplicationId,
-            namespace: "urn:x-cast:json"
-        });
-
-        castAway.initialize(function(err, data) {
-            if (err) {
-                return console.log("error initialized", err);
-            } else {
-                return console.log("initialized", data);
-            }
-        });
-
+    angular.module("GScreen").controller("Video", function($scope, castAway, CONFIG, $http) {
+        var mediaControls;
+        castAway.initialize();
 
         var media = {
             "description": "what car can you get for a grand",
-            "source": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+            "source": "file://c:/big-buck-bunny_trailer.webm",
+            //"source": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
             "subtitle": "By Garage419",
             "thumb": "images/WhatCarCanYouGetForAGrand.jpg",
             "title": "What care can you get for a grand?",
-            "contentType": "video/mp4"
+            "contentType": "video/webm"
         };
 
 
-        onSuccess = function() {
-            console.log("yay!");
-        };
+        $scope.cast = function() {
 
-        onError = function() {
-            console.log("ah");
-        };
+            var mediaInfo = new chrome.cast.media.MediaInfo(media.source);
 
-        castAway.on("receivers:available", function() {
-            castAway.requestSession(function(err, session) {
+            mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+            mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
+            mediaInfo.contentType = media.contentType;
 
-                if (err) {
-                    return console.log("Error getting session", err);
-                }
-
-                var mediaInfo = new chrome.cast.media.MediaInfo(media.source);
-
-                mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
-                mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
-                mediaInfo.contentType = media.contentType;
-
-                window.session = session;
-                session.load(mediaInfo);
-                console.log(session);
+            window.session.load(mediaInfo, function(data) {
+                mediaControls = data;
             });
-        });
 
 
+        };
 
+        $scope.stop = function() {
+            if (mediaControls) {
+                mediaControls.stop();
+            }
+        };
+
+        $scope.stream = function() {
+            console.log("starting stream");
+            return $http.get("/custom/castVideo");
+        };
     });
 
 }).call(this);

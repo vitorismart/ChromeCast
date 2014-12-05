@@ -6,7 +6,10 @@
     <div ng-controller="Video">
     <form>
         <input type="text" id="videoUrl" name="videoUrl" ng-model="video.url" />
-        <button name="send" id="send" >cast </button>
+        <button name="cast" id="send" ng-click="cast()" >cast </button>
+        <button name="stop" id="stop" ng-click="stop()" >stop </button>
+        <button name="stream" id="stream" ng-click="stream()"> stream</button>
+
     </form>
     </div>
 </body>

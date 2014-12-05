@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html ng-app="GScreen">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Greenscreen</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/css/app.css">
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
     <script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
     <script src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
     <script src="/js/vendor/castaway.js"></script>
@@ -16,24 +21,43 @@
     <script src="/js/vendor/angular-resource.js"></script>
     <script src="/js/gscreen.js"></script>
     <script src="/js/gscreen-config.js"></script>
-  </head>
-  <body ng-controller="Main">
+</head>
+
+<body ng-controller="Main">
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Manage <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/">Home</a>
+                            </li>
+                            <li><a href="/chromecasts">Chromecasts</a>
+                            </li>
+                            <li><a href="/channels">Channels</a>
+                            </li>
+                            <li><a href="/alert">Push Alert</a>
+                            </li>
+                            <li><a href="/takeover">Channel Takeover</a>
+                            </li>
+                            <li><a href="/videotest">Video</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
     <flash-container></flash-container>
-    <header>
-      <div class="row">
-        <div class="column--mobile-1of2">
-          <h1 class="logo">
-            <a href="/"><span class="icon-logo-g"></span>Greenscreen</a>
-          </h1>
-        </div>
-        <div class="column--mobile-1of2">
-          <span class="user">{{ username }}</span>
-        </div>
-      </div>
-    </header>
-    
-
     <div id="container" ng-view></div>
+    <footer>
+        <img src="/../images/logo143x59.png" alt="ISmartSoftware" />
+        <h2 class="copyright">Portal | ©iSmart Software</h3>
+    </footer>
 
-  </body>
+</body>
+
 </html>

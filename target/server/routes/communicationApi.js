@@ -16,21 +16,31 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-  var Alert, Channel, Receiver, Takeover, express, pathLib;
+    var Alert, Channel, Receiver, Takeover, express, pathLib;
 
-  pathLib = require("path");
+    pathLib = require("path");
+    fs = require("fs");
+    express = require("express");
 
-  express = require("express");
+    module.exports = function(app, sockets) {
+        router = express.Router();
 
-  module.exports = function(app, sockets) {
-    router = express.Router();
+        router.get("/clearAlerts", function(req, res) {
+            console.log("reached!");
+            return sockets.emit("alert-deleted");
+        });
 
-    router.get("/clearAlerts", function(req, res) {
-      console.log("reached!");
-      return sockets.emit("alert-deleted");
-    });
+        router.get("/castVideo", function(req, res) {
+            //move this to a better place
+            console.log("reachedCastVideoss");
+            var readStream = fs.createReadStream(pathLib.join(__dirname + "/../../../public/elephants-dream.webm"));
+            readStream.addListener('data', function(data) {
+                console.log("cast-video emitted");
+                sockets.emit('cast-video', data);
+            });
+        });
 
-    return app.use('/custom/', router);
-  };
+        return app.use('/custom/', router);
+    };
 
 }).call(this);
