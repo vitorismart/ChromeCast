@@ -62,4 +62,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
   require("./services/feeds");
 
+  require("./services/angular-upload.min.js");
+
 }).call(this);
