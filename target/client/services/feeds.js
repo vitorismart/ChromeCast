@@ -22,7 +22,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
         return exports = {
             loadFeed: function(url, callback) {
-                resource = $resource('http://ajax.googleapis.com/ajax/services/feed/load', {}, {
+                resource = $resource('https://ajax.googleapis.com/ajax/services/feed/load', {}, {
                     fetch: {
                         method: 'JSONP',
                         params: {
