@@ -18,6 +18,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 (function() {
     angular.module("GScreen").controller("Chromecasts", function($scope, Chromecast, castAway) {
 
+        castAway.initialize();
         $scope.chromecasts = Chromecast.query();
         $scope.chromecastAvailable = castAway.available;
         console.log("Initial Chromecast available", $scope.chromecastAvailable);

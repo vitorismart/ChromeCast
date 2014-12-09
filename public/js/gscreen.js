@@ -280,6 +280,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 (function() {
     angular.module("GScreen").controller("Chromecasts", function($scope, Chromecast, castAway) {
 
+        castAway.initialize();
         $scope.chromecasts = Chromecast.query();
         $scope.chromecastAvailable = castAway.available;
         console.log("Initial Chromecast available", $scope.chromecastAvailable);
@@ -1023,16 +1024,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         exports = {
             available: false,
             on: function(key, func) {
-                //if (!listeners[key]) {
-                  //  listeners[key] = [];
-                //}
-                //return listeners[key].push(func);
-
-                if(castAway){
-                    castAway.on(key, func);
-                }else{
-                    console.log("castAway needs to be initialized before setting listeners");
+                if (!listeners[key]) {
+                   listeners[key] = [];
                 }
+                return listeners[key].push(func);
+
+                // if(castAway){
+                //     castAway.on(key, func);
+                // }else{
+                //     console.log("castAway needs to be initialized before setting listeners");
+                // }
 
             },
             connect: function(cb) {
