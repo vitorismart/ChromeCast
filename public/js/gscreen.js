@@ -491,7 +491,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 },{}],"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\video.js":[function(require,module,exports){
 (function() {
-    angular.module("GScreen").controller("Video", function($scope, castAway, CONFIG, $http) {
+    angular.module("GScreen").controller("Video", function($scope, castAway, CONFIG, $http, feedLoader, $sce) {
         var mediaControls;
         castAway.initialize();
 
@@ -505,7 +505,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             "contentType": "video/webm"
         };
 
-
+        $scope.test = function() {
+            return $http.get("/custom/testVideo");
+        };
         $scope.cast = function() {
 
             var mediaInfo = new chrome.cast.media.MediaInfo(media.source);
@@ -521,6 +523,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
         };
 
+        $scope.videoFileClick = function(event) {
+        	console.log(event);
+        };
+
         $scope.stop = function() {
             if (mediaControls) {
                 mediaControls.stop();
@@ -531,6 +537,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             console.log("starting stream");
             return $http.get("/custom/castVideo");
         };
+
+    
+        feedLoader.loadFeed("http://rmurphey.com/atom.xml",function(data) {
+            $scope.feed = data.responseData.feed;
+            var entries = $scope.feed.entries;
+            entries.forEach(function(entry){
+                entry.contentHTML = $sce.trustAsHtml(entry.content);
+            });
+
+        });
+
     });
 
 }).call(this);
@@ -626,7 +643,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-  window.GScreen = angular.module("GScreen", ["ng", "ngResource", "ngRoute"]);
+  window.GScreen = angular.module("GScreen", ["ng", "ngResource", "ngRoute", "lr.upload"]);
 
   require("./routes");
 
@@ -670,9 +687,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
   require("./services/sockets");
 
+  require("./services/feeds");
+
 }).call(this);
 
-},{"./controllers/alert-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\alert-form.js","./controllers/channel-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\channel-form.js","./controllers/channels":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\channels.js","./controllers/chromecast-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\chromecast-form.js","./controllers/chromecasts":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\chromecasts.js","./controllers/main":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\main.js","./controllers/receiver":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\receiver.js","./controllers/screen":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\screen.js","./controllers/takeover-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\takeover-form.js","./controllers/video":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\video.js","./directives/flash-container":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\directives\\flash-container.js","./directives/real-link":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\directives\\real-link.js","./resources/alert":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\alert.js","./resources/channel":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\channel.js","./resources/chromecast":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\chromecast.js","./resources/takeover":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\takeover.js","./routes":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\routes.js","./services/cast-away":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\cast-away.js","./services/flash":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\flash.js","./services/local-device":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\local-device.js","./services/sockets":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\sockets.js"}],"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\alert.js":[function(require,module,exports){
+},{"./controllers/alert-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\alert-form.js","./controllers/channel-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\channel-form.js","./controllers/channels":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\channels.js","./controllers/chromecast-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\chromecast-form.js","./controllers/chromecasts":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\chromecasts.js","./controllers/main":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\main.js","./controllers/receiver":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\receiver.js","./controllers/screen":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\screen.js","./controllers/takeover-form":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\takeover-form.js","./controllers/video":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\video.js","./directives/flash-container":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\directives\\flash-container.js","./directives/real-link":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\directives\\real-link.js","./resources/alert":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\alert.js","./resources/channel":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\channel.js","./resources/chromecast":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\chromecast.js","./resources/takeover":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\takeover.js","./routes":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\routes.js","./services/cast-away":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\cast-away.js","./services/feeds":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\feeds.js","./services/flash":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\flash.js","./services/local-device":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\local-device.js","./services/sockets":"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\sockets.js"}],"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\resources\\alert.js":[function(require,module,exports){
 // Generated by CoffeeScript 1.8.0
 
 /*
@@ -1069,6 +1088,50 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             }
         };
         return exports;
+    });
+
+}).call(this);
+
+},{}],"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\services\\feeds.js":[function(require,module,exports){
+// Generated by CoffeeScript 1.8.0
+
+/*
+Copyright (c) 2014, Groupon
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+(function() {
+    angular.module("GScreen").factory("feedLoader", function($resource) {
+        var exports, resource;
+
+
+        return exports = {
+            loadFeed: function(url, callback) {
+                resource = $resource('http://ajax.googleapis.com/ajax/services/feed/load', {}, {
+                    fetch: {
+                        method: 'JSONP',
+                        params: {
+                            v: '1.0',
+                            callback: 'JSON_CALLBACK',
+                            q: url
+                        }
+                    }
+                });
+                return resource.fetch(function(data) {
+                    callback(data);
+                });
+            }
+        };
     });
 
 }).call(this);

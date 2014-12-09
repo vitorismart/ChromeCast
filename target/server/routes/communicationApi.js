@@ -16,11 +16,20 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-    var Alert, Channel, Receiver, Takeover, express, pathLib;
+    var Alert, Channel, Receiver, Takeover, express, pathLib, ffmpeg, command, multipart;
 
+    multipart = require("connect-multiparty")();
     pathLib = require("path");
     fs = require("fs");
     express = require("express");
+    ffmpeg = require("fluent-ffmpeg");
+    command = ffmpeg();
+
+    ffmpeg('/path/to/file.avi')
+        .on('start', function(commandLine) {
+            console.log('Spawned Ffmpeg with command: ' + commandLine);
+        });
+
 
     module.exports = function(app, sockets) {
         router = express.Router();
@@ -29,18 +38,69 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             console.log("reached!");
             return sockets.emit("alert-deleted");
         });
+        router.get("/testVideo", function(req, res) {
+            console.log("testing");
+            castFromFile("public/videos/elephant.webm");
 
-        router.get("/castVideo", function(req, res) {
-            //move this to a better place
-            console.log("reachedCastVideoss");
-            var readStream = fs.createReadStream(pathLib.join(__dirname + "/../../../public/elephants-dream.webm"));
+        });
+
+        function castFromFile(path) {
+            var readStream = fs.createReadStream(path);
+
             readStream.addListener('data', function(data) {
                 console.log("cast-video emitted");
                 sockets.emit('cast-video', data);
             });
+
+            readStream.on('end', function() {
+                sockets.emit("play-video");
+            });
+        }
+
+        router.post("/castVideo", multipart, function(req, res) {
+            var data;
+
+            encodeVideo(req.files.video.path, function(data) {
+                console.log("cast-video emitted");
+                sockets.emit('cast-video', data);
+            }, function(path) {
+                console.log("play!");
+                //castFromFile(path);
+                sockets.emit("play-video");
+            });
+            return;
         });
 
         return app.use('/custom/', router);
     };
+
+
+    function encodeVideo(url, onDataFunction, onEndFunction) {
+        var command, stream, path;
+        path = "public/videos/tmp.webm";
+        command = ffmpeg(url)
+            .addOptions(["-vcodec vp8", "-g 1"])
+            .format("webm")
+            .on('start', function(commandLine) {
+                console.log('Spawned Ffmpeg with command: ' + commandLine);
+            })
+            .on('error', function(error) {
+                console.log('error: ' + error);
+            })
+            .on('end', function(end) {
+                console.log('complete: ' + end);
+                //onEndFunction(path);
+            });
+
+        stream = command.pipe();
+
+        stream.on("data", function(data) {
+            onDataFunction(data);
+        });
+
+        stream.on("end", function() {
+            onEndFunction();
+        });
+    }
 
 }).call(this);

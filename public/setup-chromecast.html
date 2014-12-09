@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html ng-app="GScreen" ng-controller="Receiver">
-  <head>
+
+<head>
     <title>{{ title }}</title>
     <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" href="/css/channel.css">
     <script src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script src="/js/vendor/castaway.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/vendor/jquery.js"></script>
@@ -13,19 +15,71 @@
     <script src="/js/vendor/angular-route.js"></script>
     <script src="/js/vendor/angular-resource.js"></script>
     <script src="/js/gscreen.js"></script>
-  </head>
-  <body class="setup">
+    <script src="/js/vendor/angular-upload.min.js"></script>
+
+</head>
+
+<body class="setup">
     <div class="template-full-screen widescreen">
-      <div class="main-window">
-        <h1 ng-hide="channelUrl">Setting Up Chromecast</h1>
-        <iframe ng-show="channelUrl" src="{{ channelUrl }}"></iframe>
-        <video id="video" autoplay />
+        <div class="main-window">
+            <h1 ng-hide="channelUrl">Setting Up Chromecast</h1>
+            <iframe ng-show="channelUrl" src="{{ channelUrl }}"></iframe>
+            <video id="video" />
 
-        <div ng-show="chromecast.alert" class="alert" style="background-color:{{ chromecast.alert.style }};">{{ chromecast.alert.text }}</div>
+            <div ng-show="chromecast.alert" class="alert" style="background-color:{{ chromecast.alert.style }};">{{ chromecast.alert.text }}</div>
 
-        <div ng-show="chromecast.name" class="channel-overlay">{{ chromecast.name }}</div>
+            <div ng-show="chromecast.name" class="channel-overlay">{{ chromecast.name }}</div>
 
-      </div>
+        </div>
     </div>
-  </body>
+</body>
+<script>
+var socket = io.connect('http://localhost:4994');
+
+
+window.URL = window.URL || window.webkitURL;
+window.MediaSource = window.MediaSource || window.WebKitMediaSource;
+
+var mediaSource = new MediaSource();
+var video = document.getElementById("video");
+var queue = [];
+var sourceBuffer;
+var firstChunk = true;
+var sourceBuffer;
+video.src = window.URL.createObjectURL(mediaSource);
+
+streamIt = function(e) {
+    video.pause();
+    sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
+    var onBufferUpdated = function() {
+        appendSegmentOfData();
+    };
+
+    socket.on("cast-video", function(data) {
+        var uIntArray = new Uint8Array(data);
+        console.log("received from server");
+
+        queue.push(uIntArray);
+    });
+
+    socket.on("play-video", function() {
+        sourceBuffer.addEventListener('updateend', onBufferUpdated);
+        appendSegmentOfData();
+    });
+
+
+};
+
+function appendSegmentOfData() {
+    console.log("called the callback");
+    if (queue.length) {
+        console.log("appended to buffer");
+        sourceBuffer.appendBuffer(queue.shift());
+    }
+}
+
+mediaSource.addEventListener('sourceopen', streamIt);
+mediaSource.addEventListener('webkitsourceopen', streamIt);
+</script>
+
 </html>

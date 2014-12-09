@@ -1,19 +1,21 @@
-<!DOCTYPE html>
-<html>
+<div ng-controller="Video">
+    <div upload-button url="/custom/castVideo" param="video" smultiple="false">Fileupload</upload-button>
 
+        <button name="cast" id="send" class="btn btn-danger" ng-click="cast()">cast </button>
+        <button name="stop" id="stop" class="btn btn-danger" ng-click="stop()">stop </button>
+        <button name="stop" id="stop" class="btn btn-danger" ng-click="test()">test </button>
+        <button name="stream" id="stream" class="btn btn-danger" class="btn btn-danger" ng-click="stream()"> stream</button>
 
-<body>
-    <div ng-controller="Video">
-    <form>
-        <input type="text" id="videoUrl" name="videoUrl" ng-model="video.url" />
-        <button name="cast" id="send" ng-click="cast()" >cast </button>
-        <button name="stop" id="stop" ng-click="stop()" >stop </button>
-        <button name="stream" id="stream" ng-click="stream()"> stream</button>
+        </form>
+        <div id="feed">
+            {{video.url}}aaa
 
-    </form>
+            <span ng-bind="feed.link"></span>
+
+            <div ng-repeat="entry in feed.entries">
+                <span ng-bind="entry.contentSnippet" />
+                <br/>
+            </div>
+
+        </div>
     </div>
-</body>
-
-
-
-</html>

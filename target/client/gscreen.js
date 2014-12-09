@@ -16,7 +16,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-  window.GScreen = angular.module("GScreen", ["ng", "ngResource", "ngRoute"]);
+  window.GScreen = angular.module("GScreen", ["ng", "ngResource", "ngRoute", "lr.upload"]);
 
   require("./routes");
 
@@ -59,5 +59,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
   require("./services/local-device");
 
   require("./services/sockets");
+
+  require("./services/feeds");
 
 }).call(this);
