@@ -16,7 +16,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-  window.GScreen = angular.module("GScreen", ["ng", "ngResource", "ngRoute"]);
+  window.GScreen = angular.module("GScreen", ["ng", "ngResource", "ngRoute", "lrUpload"]);
 
   require("./routes");
 
