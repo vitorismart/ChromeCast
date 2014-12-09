@@ -34,52 +34,6 @@
     </div>
 </body>
 <script>
-var socket = io.connect('http://localhost:4994');
-
-
-window.URL = window.URL || window.webkitURL;
-window.MediaSource = window.MediaSource || window.WebKitMediaSource;
-
-var mediaSource = new MediaSource();
-var video = document.getElementById("video");
-var queue = [];
-var sourceBuffer;
-var firstChunk = true;
-var sourceBuffer;
-video.src = window.URL.createObjectURL(mediaSource);
-
-streamIt = function(e) {
-    video.pause();
-    sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
-    var onBufferUpdated = function() {
-        appendSegmentOfData();
-    };
-
-    socket.on("cast-video", function(data) {
-        var uIntArray = new Uint8Array(data);
-        console.log("received from server");
-
-        queue.push(uIntArray);
-    });
-
-    socket.on("play-video", function() {
-        sourceBuffer.addEventListener('updateend', onBufferUpdated);
-        appendSegmentOfData();
-    });
-
-
-};
-
-function appendSegmentOfData() {
-    console.log("called the callback");
-    if (queue.length) {
-        console.log("appended to buffer");
-        sourceBuffer.appendBuffer(queue.shift());
-    }
-}
-
-mediaSource.addEventListener('sourceopen', streamIt);
-mediaSource.addEventListener('webkitsourceopen', streamIt);
 </script>
 
 </html>

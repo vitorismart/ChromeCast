@@ -342,7 +342,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-    angular.module("GScreen").controller("Receiver", function($scope, $sce, $location, localDevice) {
+    angular.module("GScreen").controller("Receiver", function($scope, $sce, $location, localDevice, sockets) {
         var match;
         if (match = $location.url().match(/\/chromecasts\/([^\/\?#]+)/)) {
             localDevice.setChromecastId(match[1]);
@@ -371,19 +371,66 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 castConfig = {
                     "mediaElement": mediaElement
                 };
-                
+
                 receiver = castAway.receive(castConfig);
                 receiver.on("setChromecastId", function(id) {
                     return localDevice.setChromecastId(id);
                 });
+
+                loadMediaSource();
 
             } catch (_error) {
                 e = _error;
                 return console.log("Cannot load CastAway", e);
             }
         };
-    });
 
+
+
+        //SHOULD BE SOMETHING ELSE(CONTROLLER,SERVICE.. ) NOT SURE WHAT
+        function loadMediaSource() {
+            window.URL = window.URL || window.webkitURL;
+            window.MediaSource = window.MediaSource || window.WebKitMediaSource;
+
+            var mediaSource = new MediaSource();
+            var video = document.getElementById("video");
+            var queue = [];
+            var sourceBuffer;
+            var firstChunk = true;
+            video.src = window.URL.createObjectURL(mediaSource);
+
+            streamIt = function(e) {
+                video.pause();
+                sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
+                var onBufferUpdated = function() {
+                    appendSegmentOfData();
+                };
+
+                sockets.on("cast-video", function(data) {
+                    var uIntArray = new Uint8Array(data);
+                    console.log("received from server");
+
+                    queue.push(uIntArray);
+                });
+
+                sockets.on("play-video", function() {
+                    sourceBuffer.addEventListener('updateend', onBufferUpdated);
+                    appendSegmentOfData();
+                });
+            };
+
+            function appendSegmentOfData() {
+                console.log("called the callback");
+                if (queue.length) {
+                    console.log("appended to buffer");
+                    sourceBuffer.appendBuffer(queue.shift());
+                }
+            }
+            mediaSource.addEventListener('sourceopen', streamIt);
+            mediaSource.addEventListener('webkitsourceopen', streamIt);
+        }
+
+    });
 }).call(this);
 
 },{}],"C:\\inetpub\\wwwroot\\Greenscreen\\target\\client\\controllers\\screen.js":[function(require,module,exports){
