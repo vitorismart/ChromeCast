@@ -1,0 +1,6 @@
+Ensuring DB Exists...
+C:\inetpub\wwwroot\Greenscreen\target\server
+GScreen is listening to localhost:\\.\pipe\6d864ddb-84b5-490b-8b8f-222a8d454459
+[0mGET /helloworld/hello.js [32m200 [0m26.996 ms - 2939[0m
+[0mGET /favicon.ico [32m200 [0m1.513 ms - 2939[0m
+Creating Design Doc...
