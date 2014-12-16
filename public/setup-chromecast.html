@@ -23,10 +23,7 @@
         <div class="main-window">
             <h1 ng-hide="channelUrl">Setting Up Chromecast</h1>
             <iframe ng-show="channelUrl" src="{{ channelUrl }}"></iframe>
-            <video id="video" />
-
             <div ng-show="chromecast.alert" class="alert" style="background-color:{{ chromecast.alert.style }};">{{ chromecast.alert.text }}</div>
-
             <div ng-show="chromecast.name" class="channel-overlay">{{ chromecast.name }}</div>
 
         </div>

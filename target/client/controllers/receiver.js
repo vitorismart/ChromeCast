@@ -51,7 +51,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                     return localDevice.setChromecastId(id);
                 });
 
-                loadMediaSource();
+               // loadMediaSource();
 
             } catch (_error) {
                 e = _error;
@@ -62,47 +62,47 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 
         //SHOULD BE SOMETHING ELSE(CONTROLLER,SERVICE.. ) NOT SURE WHAT
-        function loadMediaSource() {
-            window.URL = window.URL || window.webkitURL;
-            window.MediaSource = window.MediaSource || window.WebKitMediaSource;
+        // function loadMediaSource() {
+        //     window.URL = window.URL || window.webkitURL;
+        //     window.MediaSource = window.MediaSource || window.WebKitMediaSource;
 
-            var mediaSource = new MediaSource();
-            var video = document.getElementById("video");
-            var queue = [];
-            var sourceBuffer;
-            var firstChunk = true;
-            video.src = window.URL.createObjectURL(mediaSource);
+        //     var mediaSource = new MediaSource();
+        //     var video = document.getElementById("video");
+        //     var queue = [];
+        //     var sourceBuffer;
+        //     var firstChunk = true;
+        //     video.src = window.URL.createObjectURL(mediaSource);
 
-            streamIt = function(e) {
-                video.pause();
-                sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
-                var onBufferUpdated = function() {
-                    appendSegmentOfData();
-                };
+        //     streamIt = function(e) {
+        //         video.pause();
+        //         sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
+        //         var onBufferUpdated = function() {
+        //             appendSegmentOfData();
+        //         };
 
-                sockets.on("cast-video", function(data) {
-                    var uIntArray = new Uint8Array(data);
-                    console.log("received from server");
+        //         sockets.on("cast-video", function(data) {
+        //             var uIntArray = new Uint8Array(data);
+        //             console.log("received from server");
 
-                    queue.push(uIntArray);
-                });
+        //             queue.push(uIntArray);
+        //         });
 
-                sockets.on("play-video", function() {
-                    sourceBuffer.addEventListener('updateend', onBufferUpdated);
-                    appendSegmentOfData();
-                });
-            };
+        //         sockets.on("play-video", function() {
+        //             sourceBuffer.addEventListener('updateend', onBufferUpdated);
+        //             appendSegmentOfData();
+        //         });
+        //     };
 
-            function appendSegmentOfData() {
-                console.log("called the callback");
-                if (queue.length) {
-                    console.log("appended to buffer");
-                    sourceBuffer.appendBuffer(queue.shift());
-                }
-            }
-            mediaSource.addEventListener('sourceopen', streamIt);
-            mediaSource.addEventListener('webkitsourceopen', streamIt);
-        }
+        //     function appendSegmentOfData() {
+        //         console.log("called the callback");
+        //         if (queue.length) {
+        //             console.log("appended to buffer");
+        //             sourceBuffer.appendBuffer(queue.shift());
+        //         }
+        //     }
+        //     mediaSource.addEventListener('sourceopen', streamIt);
+        //     mediaSource.addEventListener('webkitsourceopen', streamIt);
+        // }
 
     });
 }).call(this);
