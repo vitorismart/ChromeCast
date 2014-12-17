@@ -16,41 +16,63 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-  angular.module("GScreen").controller("Screen", function($scope, $sce, $location, Channel, sockets) {
-    var id, lastTimeoutId, mainContentUrlCounter, rotateMainContentUrl;
-    id = $location.url().match(/\/channels\/([^\/\?]+)/)[1];
-    $scope.channel = Channel.get(id);
-    $scope.channel.$promise.then(function(channel) {
-      return setTimeout(rotateMainContentUrl, 0);
-    });
-    sockets.on("channel-updated", function(channel) {
-      if (channel.id === $scope.channel.id) {
-        $scope.channel = channel;
-        return setTimeout(rotateMainContentUrl, 0);
-      }
-    });
-    mainContentUrlCounter = 0;
-    lastTimeoutId = null;
-    return rotateMainContentUrl = function() {
-      var cell, seconds, urls;
-      clearTimeout(lastTimeoutId);
-      cell = $scope.channel.cells[0];
-      urls = cell.urls;
-      if (urls.length === 1) {
-        $scope.mainContentUrl = $sce.trustAsResourceUrl(urls[0].url);
-      } else {
-        $scope.mainContentUrl = $sce.trustAsResourceUrl(urls[mainContentUrlCounter].url);
-        mainContentUrlCounter++;
-        if (mainContentUrlCounter >= urls.length) {
-          mainContentUrlCounter = 0;
+    angular.module("GScreen").controller("Screen", function($scope, $sce, $location, Channel, sockets) {
+        var id, lastTimeoutId, mainContentUrlCounter, rotateMainContentUrl;
+        id = $location.url().match(/\/channels\/([^\/\?]+)/)[1];
+        $scope.channel = Channel.get(id);
+        $scope.channel.$promise.then(function(channel) {
+            return setTimeout(rotateMainContentUrl, 0);
+        });
+        sockets.on("channel-updated", function(channel) {
+            if (channel.id === $scope.channel.id) {
+                $scope.channel = channel;
+                return setTimeout(rotateMainContentUrl, 0);
+            }
+        });
+        mainContentUrlCounter = 0;
+        lastTimeoutId = null;
+
+        return rotateMainContentUrl = function() {
+            var cell, seconds, urls;
+            clearTimeout(lastTimeoutId);
+            cell = $scope.channel.cells[0];
+            urls = cell.urls;
+            if (urls.length === 1) {
+                var url = buildUrlWithTime(urls[0].url);
+                $scope.mainContentUrl = $sce.trustAsResourceUrl(url);
+            } else {
+                var url = buildUrlWithTime(urls[mainContentUrlCounter].url);
+                $scope.mainContentUrl = $sce.trustAsResourceUrl(url);
+                mainContentUrlCounter++;
+                if (mainContentUrlCounter >= urls.length) {
+                    mainContentUrlCounter = 0;
+                }
+                seconds = parseInt(cell.duration, 10);
+                lastTimeoutId = setTimeout(rotateMainContentUrl, seconds * 1000);
+            }
+            if (!$scope.$$phase) {
+                return $scope.$apply();
+            }
+        };
+
+        function buildUrlWithTime(url) {
+          
+            var now = new Date();
+            var UTC = now.getTime();
+            var localOffset = (-1) * now.getTimezoneOffset() * 60000;
+            var currentTime = Math.round(new Date(UTC + localOffset).getTime());
+            var urlWithTime = "";
+
+            if(url.indexOf("?") != -1){
+              urlWithTime = url + "&clientLocalTimeMilli=" + currentTime;
+            }else{
+              urlWithTime = url + "?clientLocalTimeMilli=" + currentTime;
+            }
+
+            return urlWithTime;
         }
-        seconds = parseInt(cell.duration, 10);
-        lastTimeoutId = setTimeout(rotateMainContentUrl, seconds * 1000);
-      }
-      if (!$scope.$$phase) {
-        return $scope.$apply();
-      }
-    };
-  });
+
+
+    });
 
 }).call(this);
