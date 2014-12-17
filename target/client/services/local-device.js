@@ -137,6 +137,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             console.log("Creating alert", alert);
             return createAlert(alert);
         });
+
+        sockets.on("client-checkin", function(clientName) {
+            alert = {};
+            alert.expiresAt = new Date(new Date().getTime() + 5000);
+            alert.text = clientName + "Just checked in";
+            createAlert(alert);
+        });
+
         loadChromecastFromPersistence();
         exports = {
             setChromecastId: function(id) {
