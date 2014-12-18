@@ -47,14 +47,14 @@
         };
 
     
-        feedLoader.loadFeed("http://rmurphey.com/atom.xml",function(data) {
-            $scope.feed = data.responseData.feed;
-            var entries = $scope.feed.entries;
-            entries.forEach(function(entry){
-                entry.contentHTML = $sce.trustAsHtml(entry.content);
-            });
+        // feedLoader.loadFeed("http://rmurphey.com/atom.xml",function(data) {
+        //     $scope.feed = data.responseData.feed;
+        //     var entries = $scope.feed.entries;
+        //     entries.forEach(function(entry){
+        //         entry.contentHTML = $sce.trustAsHtml(entry.content);
+        //     });
 
-        });
+        // });
 
     });
 

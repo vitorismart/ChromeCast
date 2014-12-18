@@ -16,7 +16,28 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-    angular.module("GScreen").controller("Receiver", function($scope, $sce, $location, localDevice, sockets) {
+    angular.module("GScreen").controller("Receiver", function($http, $scope, $sce, $location, localDevice, sockets) {
+        $scope.alertTime = 3000;
+        $scope.createAlert = function() {
+            console.log("alert");
+            alert = {};
+            alert.expiresAt = new Date(new Date().getTime() + Number($scope.alertTime));
+            alert.text = $scope.alertText;
+
+            $http({
+                method: "post",
+                url: "/custom/clientCheckin",
+                data: {
+                    alert: alert
+                }
+            });
+        };
+
+
+
+        //TEMP TEST
+
+
         var match;
         if (match = $location.url().match(/\/chromecasts\/([^\/\?#]+)/)) {
             localDevice.setChromecastId(match[1]);
@@ -36,7 +57,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         return window.onload = function() {
             var castAway, e, receiver, mediaElement;
             try {
-
                 cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG);
                 console.log('Starting media application');
                 mediaElement = document.getElementById("video");
@@ -45,13 +65,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 castConfig = {
                     "mediaElement": mediaElement
                 };
+                loadMediaSource();
 
-                receiver = castAway.receive(castConfig);
+                //receiver = castAway.receive(castConfig);
                 receiver.on("setChromecastId", function(id) {
                     return localDevice.setChromecastId(id);
                 });
 
-               // loadMediaSource();
 
             } catch (_error) {
                 e = _error;
@@ -59,50 +79,51 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             }
         };
 
-
-
         //SHOULD BE SOMETHING ELSE(CONTROLLER,SERVICE.. ) NOT SURE WHAT
-        // function loadMediaSource() {
-        //     window.URL = window.URL || window.webkitURL;
-        //     window.MediaSource = window.MediaSource || window.WebKitMediaSource;
+        function loadMediaSource() {
+            window.URL = window.URL || window.webkitURL;
+            window.MediaSource = window.MediaSource || window.WebKitMediaSource;
 
-        //     var mediaSource = new MediaSource();
-        //     var video = document.getElementById("video");
-        //     var queue = [];
-        //     var sourceBuffer;
-        //     var firstChunk = true;
-        //     video.src = window.URL.createObjectURL(mediaSource);
+            var mediaSource = new MediaSource();
+            var video = document.getElementById("video");
+            var queue = [];
+            var sourceBuffer;
+            var firstChunk = true;
+            video.src = window.URL.createObjectURL(mediaSource);
 
-        //     streamIt = function(e) {
-        //         video.pause();
-        //         sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
-        //         var onBufferUpdated = function() {
-        //             appendSegmentOfData();
-        //         };
+            streamIt = function(e) {
+                video.pause();
+                sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
+                var onBufferUpdated = function() {
+                    appendSegmentOfData();
+                };
 
-        //         sockets.on("cast-video", function(data) {
-        //             var uIntArray = new Uint8Array(data);
-        //             console.log("received from server");
+                sockets.on("cast-video", function(data) {
+                    $scope.data = {};
+                    $scope.data.video = "video";
+                    $scope.$apply();
+                    var uIntArray = new Uint8Array(data);
+                    console.log("received from server");
 
-        //             queue.push(uIntArray);
-        //         });
+                    queue.push(uIntArray);
+                });
 
-        //         sockets.on("play-video", function() {
-        //             sourceBuffer.addEventListener('updateend', onBufferUpdated);
-        //             appendSegmentOfData();
-        //         });
-        //     };
+                sockets.on("play-video", function() {
+                    sourceBuffer.addEventListener('updateend', onBufferUpdated);
+                    appendSegmentOfData();
+                });
+            };
 
-        //     function appendSegmentOfData() {
-        //         console.log("called the callback");
-        //         if (queue.length) {
-        //             console.log("appended to buffer");
-        //             sourceBuffer.appendBuffer(queue.shift());
-        //         }
-        //     }
-        //     mediaSource.addEventListener('sourceopen', streamIt);
-        //     mediaSource.addEventListener('webkitsourceopen', streamIt);
-        // }
+            function appendSegmentOfData() {
+                console.log("called the callback");
+                if (queue.length) {
+                    console.log("appended to buffer");
+                    sourceBuffer.appendBuffer(queue.shift());
+                }
+            }
+            mediaSource.addEventListener('sourceopen', streamIt);
+            mediaSource.addEventListener('webkitsourceopen', streamIt);
+        }
 
     });
 }).call(this);

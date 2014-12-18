@@ -47,6 +47,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
     $routeProvider.when("/videotest", {
       templateUrl: "/templates/video/videotest.html"
     });
+    $routeProvider.when("/receivermock", {
+      templateUrl: "/templates/receiver-mock.html"
+    });
     return $locationProvider.html5Mode(true);
   });
 

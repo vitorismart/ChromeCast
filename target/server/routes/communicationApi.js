@@ -35,8 +35,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         router = express.Router();
 
         router.get("/clearAlerts", function(req, res) {
-            console.log("reached!");
-            return sockets.emit("alert-deleted");
+            sockets.emit("alert-deleted");
+            res.end("clear alerts!")
         });
         router.get("/testVideo", function(req, res) {
             console.log("testing");
@@ -44,10 +44,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
         });
 
-        router.get("/clientCheckin", multipart, function(req, res) {
-            var data = req.query.clientName;
-            console.log("clientname:" , data);
-            sockets.emit("client-checkin", data);
+        router.post("/clientCheckin", multipart, function(req, res) {
+            console.log("clientname:", req.body);
+            sockets.emit("client-checkin", req.body.alert);
+            res.end();
             return;
         });
 
@@ -55,7 +55,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             var data;
 
             encodeVideo(req.files.video.path, function(data) {
-                console.log("cast-video emitted");
+               // console.log("cast-video emitted");
                 sockets.emit('cast-video', data);
             }, function(path) {
                 console.log("play!");

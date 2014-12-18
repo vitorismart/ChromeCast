@@ -17,11 +17,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 (function() {
     angular.module("GScreen").factory("localDevice", function(Chromecast, sockets) {
-        var clearAlert, scheduledAlert, clearTimeoutId, createAlert, exports, listeners, loadChromecast, loadChromecastFromPersistence, updateAlert, updateChannelId, updateChromecast;
+        var clearAlert, clearTimeoutId, createAlert, exports, listeners, loadChromecast, loadChromecastFromPersistence, updateAlert, updateChannelId, updateChromecast;
+        scheduledAlerts = {};
         listeners = {
             "change": []
         };
-        clearTimeoutId = null;
+
         loadChromecast = function(id) {
             return Chromecast.get(id).$promise.then(function(c) {
                 console.log("loadChromecast", c);
@@ -59,34 +60,41 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 v = _ref[k];
                 newCast[k] = v;
             }
-            newCast.alert = alert;
+
+            if (!newCast.alerts)
+                newCast.alerts = {};
+
+            newCast.alerts[alert.expiresAt] = alert;
             return updateChromecast(newCast);
         };
+
         loadChromecastFromPersistence = function() {
             var id;
             if (id = localStorage.getItem("chromecast-id")) {
                 return loadChromecast(id);
             }
         };
-        clearAlert = function() {
-            console.log("Clearing the alert");
-            if (clearTimeoutId) {
-                clearTimeout(clearTimeoutId);
 
-                if (scheduledAlert) {
-                    createScheduledAlert();
-                }
+        clearAlert = function(alertKey) {
+            console.log("Clearing the alert");
+            if (scheduledAlerts[alertKey]) {
+                createScheduledAlert(alertKey);
             }
-            return updateAlert(null);
+            //this might be dangerous
+            var _chromeCastRef = exports.chromecast;
+            delete _chromeCastRef.alerts[alertKey];
+            return updateChromecast(_chromeCastRef);
         };
 
-        createScheduledAlert = function() {
-            if (scheduledAlert) {
+        createScheduledAlert = function(alertKey) {
+            var scheduledAlert = scheduledAlerts[alertKey];
 
+            if (scheduledAlert) {
                 setTimeout(function() {
                     if (scheduledAlert) {
                         scheduledAlert.expiresAt = new Date().getTime() + (scheduledAlert.duration * 1000);
                         createAlert(scheduledAlert);
+                        delete scheduledAlerts[alertKey];
                     }
                 }, scheduledAlert.repeatTime * 1000);
             }
@@ -102,11 +110,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                     console.log("duration", duration);
 
                     if (alert.repeatTime) {
-                        scheduledAlert = alert;
+                        scheduledAlerts[alert.expiresAt] = alert;
                     }
 
-
-                    clearTimeoutId = setTimeout(clearAlert, Math.ceil(duration));
+                    var clearTimeoutId = setTimeout(clearAlert, Math.ceil(duration), alert.expiresAt);
                     return clearTimeoutId;
 
                 } else {
@@ -114,6 +121,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 }
             }
         };
+
+        clearAllAlerts = function() {
+            for (scheduledAlert in scheduledAlerts) {
+                delete scheduledAlerts[scheduledAlert];
+            }
+            var alerts = exports.chromecast.alerts ? exports.chromecast.alerts : null;
+            for (alertKey in alerts) {
+                clearAlert(alertKey);
+            }
+        };
+
         sockets.on("receiver-updated", function(chromecast) {
             if (exports.chromecast.id === chromecast.id) {
                 return updateChromecast(chromecast);
@@ -129,19 +147,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             return loadChromecastFromPersistence();
         });
         sockets.on("alert-deleted", function() {
-            console.log('alert deleted');
-            scheduledAlert = null;
-            return clearAlert();
+            return clearAllAlerts();
         });
         sockets.on("alert-created", function(alert) {
             console.log("Creating alert", alert);
             return createAlert(alert);
         });
 
-        sockets.on("client-checkin", function(clientName) {
-            alert = {};
-            alert.expiresAt = new Date(new Date().getTime() + 5000);
-            alert.text = clientName + " Just checked in";
+        sockets.on("client-checkin", function(alert) {
             createAlert(alert);
         });
 
