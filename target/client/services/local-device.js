@@ -82,7 +82,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             }
             //this might be dangerous
             var _chromeCastRef = exports.chromecast;
-            delete _chromeCastRef.alerts[alertKey];
+            if(alertKey)
+                delete _chromeCastRef.alerts[alertKey];
             return updateChromecast(_chromeCastRef);
         };
 

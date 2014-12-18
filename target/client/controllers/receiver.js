@@ -67,7 +67,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 };
                 loadMediaSource();
 
-                //receiver = castAway.receive(castConfig);
+                receiver = castAway.receive(castConfig);
                 receiver.on("setChromecastId", function(id) {
                     return localDevice.setChromecastId(id);
                 });
