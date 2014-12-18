@@ -16,7 +16,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-    angular.module("GScreen").controller("AlertForm", function($scope, $location, $http, flash, Alert, Chromecast) {
+    angular.module("GScreen").controller("AlertForm", function($scope, $location, $http, flash, Alert, Chromecast, sockets) {
 
         $scope.colors = [{
             code: "106",

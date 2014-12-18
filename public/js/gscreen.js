@@ -17,7 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-    angular.module("GScreen").controller("AlertForm", function($scope, $location, $http, flash, Alert, Chromecast) {
+    angular.module("GScreen").controller("AlertForm", function($scope, $location, $http, flash, Alert, Chromecast, sockets) {
 
         $scope.colors = [{
             code: "106",
@@ -1397,7 +1397,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         sockets.on("client-checkin", function(clientName) {
             alert = {};
             alert.expiresAt = new Date(new Date().getTime() + 5000);
-            alert.text = clientName + "Just checked in";
+            alert.text = clientName + " Just checked in";
             createAlert(alert);
         });
 

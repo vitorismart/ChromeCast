@@ -44,18 +44,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
         });
 
-        function castFromFile(path) {
-            var readStream = fs.createReadStream(path);
-
-            readStream.addListener('data', function(data) {
-                console.log("cast-video emitted");
-                sockets.emit('cast-video', data);
-            });
-
-            readStream.on('end', function() {
-                sockets.emit("play-video");
-            });
-        }
+        router.get("/clientCheckin", multipart, function(req, res) {
+            var data = req.query.clientName;
+            console.log("clientname:" , data);
+            sockets.emit("client-checkin", data);
+            return;
+        });
 
         router.post("/castVideo", multipart, function(req, res) {
             var data;
@@ -74,6 +68,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         return app.use('/custom/', router);
     };
 
+
+    function castFromFile(path) {
+        var readStream = fs.createReadStream(path);
+
+        readStream.addListener('data', function(data) {
+            console.log("cast-video emitted");
+            sockets.emit('cast-video', data);
+        });
+
+        readStream.on('end', function() {
+            sockets.emit("play-video");
+        });
+    }
 
     function encodeVideo(url, onDataFunction, onEndFunction) {
         var command, stream, path;
