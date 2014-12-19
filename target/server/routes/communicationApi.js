@@ -46,6 +46,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
         router.post("/clientCheckin", multipart, function(req, res) {
             console.log("clientname:", req.body);
+            req.body.alert.expiresAt = new Date(new Date().getTime() + 5000);//FIVE SECS DURATION HARD CODED!
             sockets.emit("client-checkin", req.body.alert);
             res.end();
             return;
