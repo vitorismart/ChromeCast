@@ -16,56 +16,31 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-  window.GScreen = angular.module("GScreen", ["ng", "ngResource", "ngRoute", "lrUpload"]);
+    var Alert, Channel, Receiver, Takeover, express, pathLib, ffmpeg, command, multipart, videoController, checkinController;
 
-  require("./routes");
+    videoController = require("../controllers/VideoController");
+    messagingController = require("../controllers/ChromecastMessagingController");
 
-  require("./controllers/alert-form");
+    multipart = require("connect-multiparty")();
+    pathLib = require("path");
+    fs = require("fs");
+    express = require("express");
 
-  require("./controllers/main");
+    module.exports = function(app, sockets) {
+        router = express.Router();
 
-  require("./controllers/channels");
+        router.get("/clearAlerts", function(req, res) {
+            messagingController.clearAlerts(req, res, sockets);
+        });
 
-  require("./controllers/channel-form");
+        router.post("/clientCheckin", multipart, function(req, res) {
+            messagingController.clientCheckin(req, res, sockets);
+        });
 
-  require("./controllers/chromecasts");
+        router.post("/castVideo", multipart, function(req, res) {
+            videoController.castVideo(req, res, sockets);
+        });
 
-  require("./controllers/chromecast-form");
-
-  require("./controllers/receiver");
-
-  require("./controllers/receiver-mock");
-
-  require("./controllers/screen");
-
-  require("./controllers/video");
-
-  require("./controllers/takeover-form");
-
-  require("./directives/flash-container");
-
-  require("./directives/real-link");
-
-  require("./resources/alert");
-
-  require("./resources/channel");
-
-  require("./resources/chromecast");
-
-  require("./resources/takeover");
-
-  require("./services/cast-away");
-
-  require("./services/flash");
-
-  require("./services/local-device");
-
-  require("./services/sockets");
-
-  require("./services/feeds");
-
-  require("./services/angular-upload.min.js");
-
-  require("./services/video-streamer.js");
-
+        return app.use('/custom/', router);
+    };
 }).call(this);

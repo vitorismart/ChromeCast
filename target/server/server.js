@@ -47,7 +47,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
     api = require("./routes/api");
 
-    communicationApi = require("./routes/communicationApi");
+    chromecastRoutes = require("./routes/ChromecastMessagingRoutes");
 
     routes = require("./routes/routes");
 
@@ -74,7 +74,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
     app.use(express["static"]("" + __dirname + "/../../public"));
 
     api(app, sockets);
-    communicationApi(app, sockets);
+    chromecastRoutes(app, sockets);
 
     routes(app);
 

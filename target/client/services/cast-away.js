@@ -29,13 +29,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                    listeners[key] = [];
                 }
                 return listeners[key].push(func);
-
-                // if(castAway){
-                //     castAway.on(key, func);
-                // }else{
-                //     console.log("castAway needs to be initialized before setting listeners");
-                // }
-
             },
             connect: function(cb) {
                 if (!castAway) {

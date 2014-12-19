@@ -16,7 +16,27 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 
 (function() {
-    angular.module("GScreen").controller("Receiver", function($http, $scope, $sce, $location, localDevice, sockets, videoStreamer) {
+    angular.module("GScreen").controller("ReceiverMock", function($http, $scope, $sce, $location, localDevice, sockets, videoStreamer) {
+
+        //ONLY FOR MOCK!!!!!!!!
+        $scope.alertTime = 3000;
+        $scope.createAlert = function() {
+            console.log("alert");
+            alert = {};
+            alert.expiresAt = new Date(new Date().getTime() + Number($scope.alertTime));
+            alert.text = $scope.alertText;
+
+            $http({
+                method: "post",
+                url: "/custom/clientCheckin",
+                data: {
+                    alert: alert
+                }
+            });
+        };
+        // CLOSE ONLY FOR MOCK!!!!!!!!
+
+
         var match;
         if (match = $location.url().match(/\/chromecasts\/([^\/\?#]+)/)) {
             localDevice.setChromecastId(match[1]);
@@ -36,7 +56,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         return window.onload = function() {
             var castAway, e, receiver, mediaElement;
             try {
-                cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG);
                 console.log('Starting media application');
 
                 //Starts listening for cast-video and  play-video socket events;
@@ -47,19 +66,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                     $scope.$apply();
                 });
 
-                castAway = new CastAway();
-                castConfig = {
-                    "mediaElement": mediaElement
-                };
-
-                receiver = castAway.receive(castConfig);
-                receiver.on("setChromecastId", function(id) {
-                    return localDevice.setChromecastId(id);
-                });
-            } catch (_error) {
+              } catch (_error) {
                 e = _error;
                 return console.log("Cannot load CastAway", e);
             }
         };
+
     });
 }).call(this);
